@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Clone</title>
+    <!-- Importing FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg-color: #fafafa;
+            --border-color: #dbdbdb;
+            --text-main: #262626;
+            --text-secondary: #8e8e8e;
+            --link-blue: #0095f6;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- NAVIGATION BAR --- */
+        nav {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-content {
+            width: 100%;
+            max-width: 975px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Cursive', sans-serif; /* Fallback for Instagram font */
+        }
+
+        .search-bar {
+            display: none; /* Hidden on very small screens */
+        }
+
+        @media (min-width: 600px) {
+            .search-bar {
+                display: block;
+                background: #efefef;
+                padding: 8px 16px;
+                border-radius: 8px;
+                width: 250px;
+                text-align: center;
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+            }
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+            font-size: 1.4rem;
+        }
+
+        .nav-icons i { cursor: pointer; }
+        .nav-icons img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            max-width: 935px;
+            margin: 90px auto 0;
+            display: flex;
+            gap: 28px;
+            padding: 0 20px;
+        }
+
+        /* --- FEED SECTION (LEFT) --- */
+        .feed {
+            flex: 1; /* Takes up remaining space */
+            max-width: 470px;
+            margin: 0 auto;
+        }
+
+        /* Stories */
+        .stories {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+        }
+        .stories::-webkit-scrollbar { display: none; /* Hide scrollbar Chrome */ }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 66px;
+            cursor: pointer;
+        }
+
+        .story-ring {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            margin-bottom: 5px;
+        }
+
+        .story-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--white);
+            object-fit: cover;
+        }
+
+        .story-user {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Posts */
+        .post {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .post-user img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-options { cursor: pointer; }
+
+        .post-image {
+            width: 100%;
+            display: block;
+        }
+
+        .post-footer {
+            padding: 14px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .action-left { display: flex; gap: 15px; }
+        .post-actions i { cursor: pointer; }
+        .post-actions i:hover { color: var(--text-secondary); }
+
+        .likes {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .caption {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .caption span { font-weight: 600; margin-right: 5px; }
+
+        .comments-link {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .time-ago {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* --- SIDEBAR (RIGHT) --- */
+        .sidebar {
+            width: 320px;
+            display: none; /* Hidden on tablets/mobile */
+        }
+
+        @media (min-width: 1000px) {
+            .sidebar { display: block; }
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .username-block div:first-child { font-weight: 600; font-size: 0.9rem; }
+        .username-block div:last-child { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .switch-btn {
+            color: var(--link-blue);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        .see-all { color: var(--text-main); font-size: 0.8rem; cursor: pointer; }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .suggestion-info {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .suggestion-text div:first-child { font-weight: 600; }
+        .suggestion-text div:last-child { color: var(--text-secondary); font-size: 0.75rem; }
+
+        .follow-btn {
+            color: var(--link-blue);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .follow-btn:hover { color: #00376b; }
+
+        .footer-links {
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #c7c7c7;
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">Instagram</div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i> Search
+            </div>
+
+            <div class="nav-icons">
+                <i class="fas fa-home"></i>
+                <i class="far fa-paper-plane"></i>
+                <i class="far fa-compass"></i>
+                <i class="far fa-heart"></i>
+                <img src="https://picsum.photos/100/100?random=10" alt="Profile">
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        
+        <!-- FEED (LEFT SIDE) -->
+        <section class="feed">
+            
+            <!-- STORIES -->
+            <div class="stories">
+                <!-- Story 1 -->
+                <div class="story">
+                    <div class="story-ring">
+                        <img src="https://picsum.photos/100/100?random=1" class="story-img" alt="User">
+                    </div>
+                    <div class="story-user">jane_doe</div>
+                </div>
+                <!-- Story 2 -->
+                <div class="story">
+                    <div class="story-ring">
+                        <img src="https://picsum.photos/100/100?random=2" class="story-img" alt="User">
+                    </div>
+                    <div class="story-user">travel_guy</div>
+                </div>
+                <!-- Story 3 -->
+                <div class="story">
+                    <div class="story-ring">
+                        <img src="https://picsum.photos/100/100?random=3" class="story-img" alt="User">
+                    </div>
+                    <div class="story-user">foodie_life</div>
+                </div>
+                <!-- Story 4 -->
+                <div class="story">
+                    <div class="story-ring">
+                        <img src="https://picsum.photos/100/100?random=4" class="story-img" alt="User">
+                    </div>
+                    <div class="story-user">design_pro</div>
+                </div>
+                <!-- Story 5 -->
+                <div class="story">
+                    <div class="story-ring">
+                        <img src="https://picsum.photos/100/100?random=5" class="story-img" alt="User">
+                    </div>
+                    <div class="story-user">gym_rat</div>
+                </div>
+            </div>
+
+            <!-- POST 1 -->
+            <article class="post">
+                <div class="post-header">
+                    <div class="post-user">
+                        <img src="https://picsum.photos/100/100?random=1" alt="User">
+                        <span>jane_doe</span>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                
+                <img src="https://picsum.photos/600/600?random=20" class="post-image" alt="Post Content">
+                
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <div class="action-left">
+                            <i class="far fa-heart"></i>
+                            <i class="far fa-comment"></i>
+                            <i class="far fa-paper-plane"></i>
+                        </div>
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                    
+                    <div class="likes">1,245 likes</div>
+                    
+                    <div class="caption">
+                        <span>jane_doe</span> Enjoying the sunset! 🌅 #vibes #summer
+                    </div>
+                    
+                    <div class="comments-link">View all 12 comments</div>
+                    <div class="time-ago">2 HOURS AGO</div>
+                </div>
+            </article>
+
+            <!-- POST 2 -->
+            <article class="post">
+                <div class="post-header">
+                    <div class="post-user">
+                        <img src="https://picsum.photos/100/100?random=2" alt="User">
+                        <span>travel_guy</span>
+                    </div>
+                    <i class="fas fa-ellipsis-h post-options"></i>
+                </div>
+                
+                <img src="https://picsum.photos/600/700?random=21" class="post-image" alt="Post Content">
+                
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <div class="action-left">
+                            <i class="far fa-heart"></i>
+                            <i class="far fa-comment"></i>
+                            <i class="far fa-paper-plane"></i>
+                        </div>
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                    
+                    <div class="likes">8,902 likes</div>
+                    
+                    <div class="caption">
+                        <span>travel_guy</span> Mountains are calling 🏔️
+                    </div>
+                    
+                    <div class="comments-link">View all 340 comments</div>
+                    <div class="time-ago">5 HOURS AGO</div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- SIDEBAR (RIGHT SIDE) -->
+        <aside class="sidebar">
+            <div class="user-profile">
+                <div class="user-info">
+                    <img src="https://picsum.photos/100/100?random=10" alt="My Profile">
+                    <div class="username-block">
+                        <div>my_account</div>
+                        <div>My Name</div>
+                    </div>
+                </div>
+                <div class="switch-btn">Switch</div>
+            </div>
+
+            <div class="suggestions-header">
+                <span>Suggested for you</span>
+                <span class="see-all">See All</span>
+            </div>
+
+            <!-- Suggestion 1 -->
+            <div class="suggestion-item">
+                <div class="suggestion-info">
+                    <img src="https://picsum.photos/100/100?random=6" alt="User">
+                    <div class="suggestion-text">
+                        <div>cool_user_99</div>
+                        <div>New to Instagram</div>
+                    </div>
+                </div>
+                <div class="follow-btn">Follow</div>
+            </div>
+
+            <!-- Suggestion 2 -->
+            <div class="suggestion-item">
+                <div class="suggestion-info">
+                    <img src="https://picsum.photos/100/100?random=7" alt="User">
+                    <div class="suggestion-text">
+                        <div>art_daily</div>
+                        <div>Followed by jane_doe</div>
+                    </div>
+                </div>
+                <div class="follow-btn">Follow</div>
+            </div>
+
+            <!-- Suggestion 3 -->
+            <div class="suggestion-item">
+                <div class="suggestion-info">
+                    <img src="https://picsum.photos/100/100?random=8" alt="User">
+                    <div class="suggestion-text">
+                        <div>tech_news</div>
+                        <div>Suggested for you</div>
+                    </div>
+                </div>
+                <div class="follow-btn">Follow</div>
+            </div>
+
+            <div class="footer-links">
+                © 2024 INSTAGRAM CLONE BY YOU
+            </div>
+        </aside>
+
+    </div>
+
+</body>
+</html>

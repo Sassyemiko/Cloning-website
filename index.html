@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --primary-green: #00b894;
+            --primary-orange: #fdcb6e;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f5f6fa;
+            --white: #ffffff;
+            --border: #dfe6e9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--text-dark);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- TOP BAR --- */
+        .top-bar {
+            background-color: var(--bg-light);
+            padding: 8px 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .top-bar .container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+
+        /* --- MAIN HEADER --- */
+        header {
+            padding: 20px 0;
+            background: var(--white);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i { color: var(--primary-green); }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        /* --- NAVIGATION MENU --- */
+        .nav-menu {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-menu ul {
+            display: flex;
+            gap: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-menu li a {
+            color: var(--text-dark);
+            padding-bottom: 5px;
+        }
+
+        .nav-menu li a.active {
+            color: var(--primary-green);
+            border-bottom: 2px solid var(--primary-green);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.7);
+        }
+
+        .hero-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            width: 80%;
+        }
+
+        .hero-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        /* --- SPECIAL OFFERS (PROJECTS GRID) --- */
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .section-title .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--primary-green);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title .divider::after {
+            content: '♦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            color: var(--primary-green);
+            padding: 0 5px;
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 5px 15px;
+            font-size: 0.95rem;
+        }
+
+        .tab.active {
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--text-dark);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .product-card {
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            transition: box-shadow 0.3s;
+            position: relative;
+            background: white;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .offer-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff7675;
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain; /* Keeps aspect ratio */
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            padding-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .product-meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars { color: var(--primary-orange); }
+
+        .btn-view {
+            display: inline-block;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-view:hover {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        /* --- BOTTOM BANNERS --- */
+        .bottom-banners {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .banner-box {
+            position: relative;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .banner-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .banner-box:hover img {
+            transform: scale(1.05);
+        }
+
+        .banner-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .banner-content h3 { font-size: 1.5rem; margin-bottom: 5px; }
+        .banner-content p { font-size: 0.9rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #2d3436;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 15px; }
+            .search-box { width: 100%; }
+            .nav-menu ul { overflow-x: auto; white-space: nowrap; }
+            .bottom-banners { grid-template-columns: 1fr; }
+            .hero img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="container">
+            <span><i class="fas fa-phone"></i> +1 234 567 890</span>
+            <span><i class="fas fa-envelope"></i> contact@myprojects.com</span>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <i class="fas fa-code"></i> DevStore
+            </a>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search for projects (e.g. Spotify, Instagram)...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="nav-icons">
+                <a href="#"><i class="far fa-heart"></i></a>
+                <a href="#"><i class="far fa-user"></i></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION MENU -->
+    <nav class="nav-menu">
+        <div class="container">
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Web Projects</a></li>
+                <li><a href="#">Mobile Apps</a></li>
+                <li><a href="#">UI Designs</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="container">
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <!-- Using a tech/coding image for the banner -->
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80" alt="Coding Banner">
+            <div class="hero-text">
+                <h2>Welcome to My Portfolio</h2>
+                <p>Explore my latest web development clones and projects.</p>
+            </div>
+        </section>
+
+        <!-- SPECIAL OFFERS (PROJECTS) -->
+        <section class="special-offers">
+            <div class="section-title">
+                <h2>Special Projects</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active">All</div>
+                <div class="tab">Frontend</div>
+                <div class="tab">Clones</div>
+                <div class="tab">Design</div>
+            </div>
+
+            <div class="products-grid">
+                
+                <!-- PROJECT 1: SPOTIFY -->
+                <a href="spotify.html" class="product-card">
+                    <span class="offer-badge">NEW</span>
+                    <!-- Using a placeholder image representing music -->
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174866.png" alt="Spotify" class="product-img" style="width: 100px; height: 100px; object-fit: contain; margin: 20px auto;">
+                    <h3 class="product-title">Spotify Clone</h3>
+                    <div class="product-meta">
+                        <span>HTML & CSS</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="btn-view">View Project</div>
+                </a>
+
+                <!-- PROJECT 2: INSTAGRAM -->
+                <a href="instagram.html" class="product-card">
+                    <span class="offer-badge">HOT</span>
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" class="product-img" style="width: 100px; height: 100px; object-fit: contain; margin: 20px auto;">
+                    <h3 class="product-title">Instagram Clone</h3>
+                    <div class="product-meta">
+                        <span>Responsive</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="btn-view">View Project</div>
+                </a>
+
+                <!-- PROJECT 3: AMAZON HUB -->
+                <a href="retailer.html" class="product-card">
+                    <span class="offer-badge">SALE</span>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Store" class="product-img" style="width: 100px; height: 100px; object-fit: contain; margin: 20px auto;">
+                    <h3 class="product-title">E-Commerce Hub</h3>
+                    <div class="product-meta">
+                        <span>Directory</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="btn-view">View Project</div>
+                </a>
+
+                <!-- PROJECT 4: PLACEHOLDER -->
+                <a href="#" class="product-card">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" alt="Coming Soon" class="product-img" style="width: 100px; height: 100px; object-fit: contain; margin: 20px auto;">
+                    <h3 class="product-title">Coming Soon</h3>
+                    <div class="product-meta">
+                        <span>Work in Progress</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="btn-view">View Project</div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- BOTTOM BANNERS -->
+        <section class="bottom-banners">
+            <div class="banner-box">
+                <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Coding">
+                <div class="banner-content">
+                    <h3>Frontend</h3>
+                    <p>Clean UI Designs</p>
+                </div>
+            </div>
+            <div class="banner-box">
+                <img src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Code">
+                <div class="banner-content">
+                    <h3>Backend</h3>
+                    <p>Database Logic</p>
+                </div>
+            </div>
+            <div class="banner-box">
+                <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Tech">
+                <div class="banner-content">
+                    <h3>Full Stack</h3>
+                    <p>Complete Solutions</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 DevStore Portfolio. All Rights Reserved.</p>
+            <p style="font-size: 0.8rem; margin-top: 10px; color: #b2bec3;">Designed with HTML & CSS</p>
+        </div>
+    </footer>
+
+</body>
+</html>
